@@ -1,23 +1,65 @@
 #include <iostream>
+#include <limits>
 
 using namespace std;
-
-struct author {char* name = "Неизвестен"; char* second_name};
+struct author {string name; string surname;};
 struct library
 {
-    char title = "Неизвестен";
+    string title;
     struct author creator;
-    int year = 0, pages = 0;
-    void displayBook(library& book) {
-        cout << "Название: " << book.title << "\n";
-        cout << "Автор: " << book.author.name << "\n";
-        cout << "Год издания: " << book.year << "\n";
-        cout << "Количество страниц: " << book.pages << "\n";
+    string year, pages;
+
+    void displayBook() const {
+        cout << "Title: " << title << "\n";
+        cout << "Author: " << creator.name << " " << creator.surname << "\n";
+        cout << "Publication year: " << year << "\n";
+        cout << "Number of pages: " << pages << "\n \n";
+    }
+
+    void createBook() {
+        cout << "Enter the title: ";
+        getline(cin, title);
+
+        cout << "Enter author's name: ";
+        getline(cin, creator.name);
+
+        cout << "Enter author's surname: ";
+        getline(cin, creator.surname);
+
+        cout << "Enter publication year: ";
+        string tempYear;
+        if (!(cin >> tempYear)) {
+            tempYear = "0";
+        }
+        year = tempYear;
+
+        cout << "Enter number of pages: ";
+        string tempPages;
+        if (!(cin >> tempPages)) {
+            tempPages = "0";
+        }
+        pages = tempPages;
+        cout << endl;
+
+        this -> displayBook();
     }
 };
 
-int main() {
-    setlocale(LC_ALL, "RUS");
-    
+int main() {    
+    library myLibrary;
+    bool flag = 1;
+    while (flag) {
+        myLibrary.createBook();
+
+        cout << "Type 'stop' to stop \n";
+        string act;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        getline(cin, act);
+        if (act == "stop") {
+            flag = 0;
+        }
+    }
+
+
     return 0;
 }
