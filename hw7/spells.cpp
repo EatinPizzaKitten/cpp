@@ -3,6 +3,7 @@
 #include <vector>
 #include <unordered_map>
 #include <stdexcept>
+#include <limits>
 
 using namespace std;
 
@@ -218,37 +219,89 @@ shared_ptr<Spell> createNewSpell(AbstractSpellFactory &factory) {
     getline(cin, name);
 
     switch (choice) {
+
     case 1: {
         int manaCost, damage;
         bool isSplash;
+
         cout << "Enter mana cost: ";
-        cin >> manaCost;
+        if (!(cin >> manaCost)) {
+            cerr << "Invalid input! Please enter a number." << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            return nullptr;
+        }
+
         cout << "Enter damage: ";
-        cin >> damage;
+        if (!(cin >> damage)) {
+            cerr << "Invalid input! Please enter a number." << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            return nullptr;
+        }
+
         cout << "Is it splash damage? (y/n): ";
         char answer;
         cin >> answer;
         isSplash = (answer == 'y' || answer == 'Y');
         return factory.createAttackingSpell(name, manaCost, damage, isSplash);
     }
+
     case 2: {
         int manaCost, armor, spikeDamage;
         cout << "Enter mana cost: ";
-        cin >> manaCost;
+        if (!(cin >> manaCost)) {
+            cerr << "Invalid input! Please enter a number." << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            return nullptr;
+        }
+
         cout << "Enter armor bonus: ";
-        cin >> armor;
+        if (!(cin >> armor)) {
+            cerr << "Invalid input! Please enter a number." << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            return nullptr;
+        }
+
         cout << "Enter spike damage: ";
-        cin >> spikeDamage;
+        if (!(cin >> spikeDamage)) {
+            cerr << "Invalid input! Please enter a number." << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            return nullptr;
+        }
+
         return factory.createBuffingSpell(name, manaCost, armor, spikeDamage);
     }
+
     case 3: {
         int manaCost, regen, manaRegen;
         cout << "Enter mana cost: ";
-        cin >> manaCost;
+        if (!(cin >> manaCost)) {
+            cerr << "Invalid input! Please enter a number." << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            return nullptr;
+        }
+
         cout << "Enter health regeneration: ";
-        cin >> regen;
+        if (!(cin >> regen)) {
+            cerr << "Invalid input! Please enter a number." << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            return nullptr;
+        }
+
         cout << "Enter mana regeneration: ";
-        cin >> manaRegen;
+        if (!(cin >> manaRegen)) {
+            cerr << "Invalid input! Please enter a number." << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            return nullptr;
+        }
+
         return factory.createHealingSpell(name, manaCost, regen, manaRegen);
     }
     default:
@@ -271,7 +324,14 @@ int main() {
             cout << "3. View spell info by name" << endl;
             cout << "4. Cast spell by name" << endl;
             cout << "5. Exit" << endl;
-            cin >> action;
+            
+
+            if (!(cin >> action)) { // Проверка успешного ввода числа
+                cerr << "Invalid input! Please enter a number." << endl;
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                continue;
+            }
 
             switch (action) {
 
