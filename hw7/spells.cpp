@@ -112,16 +112,6 @@ class SpellFactory : public AbstractSpellFactory {
 
 
 
-class SpellGroup : public Spell {
-    private: 
-        vector<shared_ptr<Spell>> spells;
-    public:
-        void addSpell(shared_ptr<Spell> spell) {
-            spells.push_back(spell);
-        }
-};
-
-
 class DuplicateSpellException : public runtime_error {
 public:
     explicit DuplicateSpellException(const string& message) : runtime_error(message) {}
@@ -132,13 +122,18 @@ public:
 class SpellBook {
     private:
         unordered_map<string, shared_ptr<Spell>> spells;
-
+        string name;
     public:
+        SpellBook(string _name) : name(_name) {}
         void addSpell(shared_ptr<Spell> spell) {
             auto [it, inserted] = spells.try_emplace(spell->getName(), move(spell));
             if (!inserted) {
                 throw DuplicateSpellException("This spell already exists in the book.");
             }
+        }
+
+        string getName() {
+            return name;
         }
 
         void displaySpells() {
@@ -309,11 +304,29 @@ shared_ptr<Spell> createNewSpell(AbstractSpellFactory &factory) {
     }
 }
 
+template<typename T>
+struct Mage {
+    string name;
+    T* spell_book;
 
+    Mage(const string& _name, T* _spell_book) : name(_name), spell_book(_spell_book) {}
+
+    void castSpell() const {
+        if (spell_book != nullptr) {
+            cout << "Mage " << name << " uses his book \"" << spell_book->getName() << "\"" << endl;
+        } else {
+            cout << "Mage " << name << " has no spell books." << endl;
+        }
+    }
+};
 
 int main() {
     SpellFactory factory;
-    SpellBook book;
+    SpellBook book = {"BOOK"};
+
+    Mage<SpellBook> mage("Gandalf", &book);
+
+    mage.castSpell();
 
     while (true) {
         try {
