@@ -1,0 +1,3 @@
+Lizard psn pip spr 150
+Yascher axe psn spr 150
+Fiend fire pip axe 150
